@@ -1,0 +1,20 @@
+#!/bin/sh
+# Launch the role UI full screen. By default the local agent's "/" redirects to this node's view.
+# A camera host (/etc/xos/kiosk.url) opens the Xos server's camera page instead, auto-allowing the
+# camera/mic prompt; with /etc/xos/headless it runs without a monitor.
+CHROMIUM=$(command -v chromium || command -v chromium-browser)
+URL="http://127.0.0.1:7000/"
+EXTRA=""
+if [ -s /etc/xos/kiosk.url ]; then
+  URL=$(cat /etc/xos/kiosk.url)
+  EXTRA="--use-fake-ui-for-media-stream"
+fi
+if [ -e /etc/xos/headless ]; then
+  exec "$CHROMIUM" --headless=new $EXTRA --no-first-run --autoplay-policy=no-user-gesture-required "$URL"
+fi
+exec cage -s -- "$CHROMIUM" \
+  --kiosk --noerrdialogs --disable-infobars --no-first-run \
+  --disable-session-crashed-bubble --disable-features=Translate \
+  --ozone-platform=wayland --autoplay-policy=no-user-gesture-required \
+  --check-for-update-interval=31536000 $EXTRA \
+  "$URL"

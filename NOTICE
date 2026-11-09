@@ -1,0 +1,18 @@
+Xos
+Copyright 2026 Exowatt, Inc.
+
+This product includes software developed at Exowatt, Inc. (https://exowatt.com).
+
+Third-party components:
+
+- three.js (MIT License, Copyright 2010-2026 three.js authors), vendored under
+  static/vendor/three/ with its license in static/vendor/three/LICENSE.
+
+Python dependencies are installed from PyPI and GitHub and are not bundled.
+They are under permissive licenses (MIT, BSD, Apache-2.0, ISC, PSF), except
+certifi, which is MPL-2.0 (file-level copyleft; used unmodified).
+
+Xos does not bundle any proprietary SDK. It talks to Zoom, Google Calendar and
+Android devices (ADB) only over their public network APIs, when an operator
+configures them. Zoom Rooms, Fire OS, the Android SDK and Meta Quest tooling
+are obtained and licensed separately by operators.

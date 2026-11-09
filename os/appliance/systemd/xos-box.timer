@@ -1,0 +1,10 @@
+[Unit]
+Description=Check every 15 s whether Admin made this Xos box a room computer
+
+[Timer]
+OnBootSec=30
+OnUnitInactiveSec=15
+AccuracySec=2
+
+[Install]
+WantedBy=timers.target

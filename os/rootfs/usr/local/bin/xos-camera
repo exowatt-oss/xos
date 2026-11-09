@@ -1,0 +1,7 @@
+#!/bin/sh
+# Background camera host for a screen that also has a Rally Bar (USB mode) plugged in: a headless
+# Chromium opens the Xos server's camera page (/etc/xos/camera.url) and serves the bar's live feed,
+# while xos-kiosk keeps the HDMI screen for the room view. Its own profile, so the two don't clash.
+CHROMIUM=$(command -v chromium || command -v chromium-browser)
+exec "$CHROMIUM" --headless=new --use-fake-ui-for-media-stream --no-first-run \
+  --autoplay-policy=no-user-gesture-required --user-data-dir="$HOME/.config/xos-camera" "$(cat /etc/xos/camera.url)"

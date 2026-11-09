@@ -1,0 +1,6 @@
+#!/bin/sh
+# First on the room Chromium's PATH (xos_room_linux.py): the room computer hands nothing to
+# another app. Chromium passes the meeting apps' links here (webex:, wbx:, ciscowebex:; the room
+# policy lets Webex pages launch them without a prompt) and the meeting stays in the browser.
+echo "xos: the room computer opens no other apps (${1%%:*}: link ignored)" >&2
+exit 3

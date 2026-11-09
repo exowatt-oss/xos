@@ -1,0 +1,24 @@
+:root {
+  color-scheme: light;
+  --ex-white: #ffffff;
+  --ex-black: #17232d;
+  --ex-neutral-50: #f9fafb;
+  --ex-neutral-100: #f3f6f8;
+  --ex-neutral-200: #e5eaee;
+  --ex-neutral-300: #cbd5dd;
+  --ex-neutral-400: #9ba9b5;
+  --ex-neutral-500: #60717d;
+  --ex-neutral-600: #465762;
+  --ex-neutral-800: #263640;
+  --ex-border: #dbe2e7;
+  --ex-orange: #16819f;
+  --ex-red: #c53649;
+  --ex-gradient: linear-gradient(110deg, #3999c3, #50bbaf);
+}
+
+.ex-card {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--ex-border);
+  border-radius: 0.6rem;
+  background: var(--ex-white);
+}

@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+"""xos-box: an Xos display box's root helper (xos-box.timer, every 15 s while it's a display).
+
+The box makes its own secret at first boot and registers it with the Xos server before the
+display opens (so before its device id is public). When Admin pairs the box as a room's meeting
+computer, the server holds a one-time setup code for it; this helper collects it with the secret
+and reinstalls the box as the room computer (install.sh --enroll). Nothing else: the helper takes
+no commands, and only this box's secret can collect its code.
+"""
+
+import json
+import os
+import secrets
+import subprocess
+import sys
+import tempfile
+import urllib.request
+from pathlib import Path
+
+STATE = Path(os.environ.get("STATE_DIRECTORY", "/var/lib/xos"))
+CONFIG = Path("/etc/xos/appliance.json")
+
+
+def private(path: Path, text: str) -> None:
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(text)
+    tmp.chmod(0o600)
+    tmp.replace(path)
+
+
+def identity() -> str:
+    """The id the display uses (xos-display makes the same file when it starts first)."""
+    path = STATE / "identity.json"
+    try:
+        return json.loads(path.read_text())["id"]
+    except (OSError, ValueError, KeyError):
+        host = os.uname().nodename.split(".")[0].removeprefix("xos").lstrip("-")
+        name = "".join(c if c.isalnum() else "-" for c in host)[:20]
+        did = "xos-" + (f"{name}-" if name else "") + secrets.token_hex(3)
+        STATE.mkdir(parents=True, exist_ok=True)
+        private(path, json.dumps({"id": did}) + "\n")
+        os.chown(path, *xos_ids())
+        return did
+
+
+def xos_ids() -> tuple[int, int]:
+    import pwd
+
+    try:
+        u = pwd.getpwnam("xos")
+        return u.pw_uid, u.pw_gid
+    except KeyError:
+        return os.getuid(), os.getgid()
+
+
+def secret() -> str:
+    path = STATE / "box-secret"  # root only; the display's browser never sees it
+    try:
+        value = path.read_text().strip()
+        if len(value) >= 32:
+            return value
+    except OSError:
+        pass
+    value = secrets.token_hex(32)
+    private(path, value)
+    os.chown(path, 0, 0)
+    return value
+
+
+def main() -> int:
+    try:
+        cfg = json.loads(CONFIG.read_text())
+    except (OSError, ValueError):
+        return 0
+    if cfg.get("role") != "display":
+        return 0  # a room computer already: nothing to collect
+    server = cfg.get("server", "").rstrip("/")
+    body = json.dumps({"id": identity(), "secret": secret()}).encode()
+    req = urllib.request.Request(
+        server + "/api/appliances/handoff",
+        data=body,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=15) as r:
+            code = json.loads(r.read() or b"{}").get("code", "")
+    except Exception as e:  # noqa: BLE001 - offline or refused: the timer tries again
+        print(f"xos-box: {e}", file=sys.stderr)
+        return 0
+    if not code:
+        return 0
+    print("xos-box: Admin made this box a room computer; installing it")
+    with tempfile.NamedTemporaryFile("wb", suffix=".sh", delete=False) as f:
+        with urllib.request.urlopen(server + "/os/appliance/install.sh", timeout=60) as r:
+            f.write(r.read())
+    try:
+        return subprocess.run(
+            ["bash", f.name, "--enroll", code, "--server", server], check=False
+        ).returncode
+    finally:
+        os.unlink(f.name)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

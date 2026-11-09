@@ -1,0 +1,20 @@
+#!/bin/sh
+# On the room computer, with a USB keyboard: open a sign-in page on the TV so the room's account
+# signs in once (the session is kept in /var/lib/xos/chromium). Run as root. Joining invitations
+# needs no sign-in (the room joins as a guest under its name); starting meetings does.
+#   sudo xos-room-signin            # Google (Meet)
+#   sudo xos-room-signin zoom       # Zoom web client (Start a Zoom meeting from the tablet)
+#   sudo xos-room-signin teams      # Microsoft Teams (Meet now from the tablet)
+#   sudo xos-room-signin done       # back to the room screen (it also goes back by itself once
+#                                   # the sign-in is finished)
+#   sudo xos-room-signin <url>      # a meeting link, to check camera and microphone by hand
+set -eu
+case "${1:-google}" in
+  google) URL=https://accounts.google.com/ ;;
+  zoom) URL=https://app.zoom.us/wc/ ;;
+  teams) URL=https://teams.microsoft.com/v2/ ;;
+  done|home) URL=home ;;
+  *) URL="$1" ;;
+esac
+printf '%s\n' "$URL" > /run/xos/open-url
+echo "Asked the room computer to open $URL (it checks every 2 s)."

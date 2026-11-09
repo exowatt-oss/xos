@@ -1,0 +1,14 @@
+{
+  "AutoplayAllowed": true,
+  "DefaultNotificationsSetting": 2,
+  "DefaultGeolocationSetting": 2,
+  "PasswordManagerEnabled": false,
+  "TranslateEnabled": false,
+  "DownloadRestrictions": 3,
+  "BrowserSignin": 0,
+  "SyncDisabled": true,
+  "MetricsReportingEnabled": false,
+  "DeveloperToolsAvailability": 2,
+  "DefaultBrowserSettingEnabled": false,
+  "PromptForDownloadLocation": false
+}

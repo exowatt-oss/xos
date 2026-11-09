@@ -1,0 +1,14 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#102d32"><meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg">
+<title>Xos Experiences · Quest</title><link rel="stylesheet" href="./viewer.css">
+<script type="importmap">{"imports":{"three":"/static/vendor/three/three.module.js","three/addons/":"/static/vendor/three/addons/"}}</script>
+</head><body>
+<div id="stage"></div>
+<header><a class="brand" href="/app/demos/">Xos <span>Experiences</span></a><div id="network" role="status">Connecting…</div><button id="enter" disabled>Checking VR…</button></header>
+<section id="welcome"><div class="card"><p class="eyebrow">Xos Experiences</p><h1 id="welcome-title">Let’s connect your Quest.</h1><p id="status">Connecting to Xos…</p><div id="pair" hidden><p>On your iPad or Mac, open Xos → Demo Studio → Add headset and enter:</p><strong id="code"></strong></div><p id="setup-help" class="help">No Google sign-in needed here. Keep this page open while you connect.</p><button id="enter-lobby" disabled hidden>Enter VR</button><button id="retry" hidden>Reconnect</button></div></section>
+<footer><span id="step-label">Waiting for your presenter</span><span>Trigger: inspect a model · Point at the floor and trigger to teleport</span></footer>
+<video id="media" playsinline preload="auto" crossorigin="anonymous" hidden></video>
+<script type="module" src="./viewer.js"></script>
+</body></html>

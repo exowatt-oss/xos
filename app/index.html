@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Xos</title>
+    <!-- A screen paints black from its very first frame, before the stylesheets and the app load:
+         no white flash when a TV reloads or switches what it shows. -->
+    <script>if (/[?&]kiosk/.test(location.search)) document.documentElement.className = "kiosk-boot";</script>
+    <style>.kiosk-boot, .kiosk-boot body { background: #000; }</style>
+    <link rel="icon" type="image/png" href="../static/favicon.png" />
+    <!-- Add to Home Screen opens Xos full screen, like an app (a workspace manager's iPad). -->
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icons/xos-180.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Xos" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="stylesheet" href="../static/css/fonts.css" />
+    <link rel="stylesheet" href="../static/css/brand.css" />
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>Xos needs JavaScript.</noscript>
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>

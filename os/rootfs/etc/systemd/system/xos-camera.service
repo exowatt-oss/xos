@@ -1,0 +1,15 @@
+[Unit]
+Description=Xos camera host (headless Chromium serving the Rally Bar feed)
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=/etc/xos/camera.url
+
+[Service]
+User=xos
+Environment=HOME=/home/xos
+ExecStart=/usr/local/bin/xos-camera
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

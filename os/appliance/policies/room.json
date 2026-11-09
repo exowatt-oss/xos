@@ -1,0 +1,44 @@
+{
+  "AutoplayAllowed": true,
+  "DefaultNotificationsSetting": 2,
+  "DefaultGeolocationSetting": 2,
+  "PasswordManagerEnabled": false,
+  "TranslateEnabled": false,
+  "DownloadRestrictions": 3,
+  "BrowserSignin": 0,
+  "SyncDisabled": true,
+  "MetricsReportingEnabled": false,
+  "DefaultBrowserSettingEnabled": false,
+  "PromptForDownloadLocation": false,
+  "VideoCaptureAllowedUrls": [
+    "https://meet.google.com",
+    "https://app.zoom.us",
+    "https://[*.]zoom.us",
+    "https://teams.microsoft.com",
+    "https://teams.live.com",
+    "https://teams.cloud.microsoft",
+    "https://[*.]webex.com"
+  ],
+  "AudioCaptureAllowedUrls": [
+    "https://meet.google.com",
+    "https://app.zoom.us",
+    "https://[*.]zoom.us",
+    "https://teams.microsoft.com",
+    "https://teams.live.com",
+    "https://teams.cloud.microsoft",
+    "https://[*.]webex.com"
+  ],
+  "AutoLaunchProtocolsFromOrigins": [
+    {"protocol": "webex", "allowed_origins": ["https://webex.com"]},
+    {"protocol": "wbx", "allowed_origins": ["https://webex.com"]},
+    {"protocol": "ciscowebex", "allowed_origins": ["https://webex.com"]},
+    {"protocol": "msteams", "allowed_origins": ["https://teams.microsoft.com", "https://teams.live.com", "https://teams.cloud.microsoft"]},
+    {"protocol": "zoommtg", "allowed_origins": ["https://zoom.us", "https://zoom.com"]},
+    {"protocol": "zoomus", "allowed_origins": ["https://zoom.us", "https://zoom.com"]}
+  ],
+  "ScreenCaptureAllowed": false,
+  "AudioCaptureAllowed": false,
+  "VideoCaptureAllowed": false,
+  "AutofillAddressEnabled": false,
+  "AutofillCreditCardEnabled": false
+}

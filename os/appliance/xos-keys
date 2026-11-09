@@ -1,0 +1,32 @@
+#!/bin/sh
+# xos-keys: keep the maintenance login's SSH keys in step with Xos (root; xos-keys.timer, every
+# 10 min). The Xos server lists the public keys allowed on every box (os/appliance/ssh/
+# authorized_keys in Git plus keys added in Admin) at /os/appliance/authorized_keys. They go in a
+# marked block of ~xosadmin/.ssh/authorized_keys; lines outside the block are left alone, and a key
+# removed in Xos is removed here. Offline or a bad answer: nothing changes.
+set -eu
+USER_="${XOS_MAINT_USER:-xosadmin}"
+[ -r /etc/xos/appliance.env ] && . /etc/xos/appliance.env
+SERVER="${XOS_SERVER:?no XOS_SERVER in /etc/xos/appliance.env}"
+HOME_="$(getent passwd "$USER_" | cut -d: -f6)"
+[ -n "$HOME_" ] || exit 0  # no maintenance login on this box
+NEW="$(mktemp)"; trap 'rm -f "$NEW" "$NEW.out"' EXIT
+curl -fsS --max-time 20 "$SERVER/os/appliance/authorized_keys" -o "$NEW" || exit 0
+# Public keys only: one per line, a known key type, no options.
+if grep -vqE '^(ssh-ed25519|ssh-rsa|ecdsa-sha2-nistp(256|384|521)|sk-ssh-ed25519@openssh\.com|sk-ecdsa-sha2-nistp256@openssh\.com) [A-Za-z0-9+/]{40,}={0,3}( [^[:cntrl:]]{0,100})?$' "$NEW"; then
+  echo "xos-keys: the server's key list has something that isn't a public key; keeping the current keys" >&2
+  exit 1
+fi
+install -d -m 0700 -o "$USER_" -g "$USER_" "$HOME_/.ssh"
+AK="$HOME_/.ssh/authorized_keys"
+touch "$AK"
+{
+  sed '/^# xos-keys begin/,/^# xos-keys end/d' "$AK"
+  echo "# xos-keys begin (managed by Xos: os/appliance/ssh/authorized_keys and Admin; edits here are replaced)"
+  cat "$NEW"
+  echo "# xos-keys end"
+} > "$NEW.out"
+if ! cmp -s "$NEW.out" "$AK"; then
+  install -m 0600 -o "$USER_" -g "$USER_" "$NEW.out" "$AK"
+  echo "xos-keys: $(grep -c . "$NEW") key(s) for $USER_"
+fi

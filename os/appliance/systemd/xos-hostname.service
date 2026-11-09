@@ -1,0 +1,14 @@
+[Unit]
+Description=Give this Xos box its own hostname (xos-<id>) the first time it boots
+Before=xos-display.service xos-room.service
+ConditionPathExists=!/var/lib/xos/hostname-set
+
+[Service]
+Type=oneshot
+# Boxes made from the Xos USB all install as "xos"; each gets a name from its machine id. Marked
+# done only once it worked, so a failed attempt is retried at the next boot.
+ExecStart=/bin/sh -c 'mkdir -p /var/lib/xos; if [ "$(hostname)" != xos ]; then touch /var/lib/xos/hostname-set; exit 0; fi; h="xos-$(head -c 6 /etc/machine-id)"; hostnamectl set-hostname "$h" && sed -i "/^127\\.0\\.1\\.1/d" /etc/hosts && echo "127.0.1.1 $h" >> /etc/hosts && touch /var/lib/xos/hostname-set'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

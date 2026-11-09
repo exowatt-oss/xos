@@ -1,0 +1,6 @@
+# Every wired port: DHCP. Room computers should be on wired Ethernet.
+[Match]
+Type=ether
+
+[Network]
+DHCP=yes

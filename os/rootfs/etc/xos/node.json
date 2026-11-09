@@ -1,0 +1,7 @@
+{
+  "role": "tv",
+  "room": "lamar",
+  "zoom_room_id": "lamar-zr",
+  "port": 7000,
+  "adapter": "zrc-sdk"
+}

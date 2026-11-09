@@ -1,0 +1,8 @@
+[Unit]
+Description=Xos: keep the maintenance login's SSH keys in step with Xos
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/xos/current/os/appliance/xos-keys

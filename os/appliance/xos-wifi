@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+"""Write the Wi-Fi networks from Xos (enroll reply on stdin) as NetworkManager profiles.
+
+Preferred first: Office, then Office IoT, and so on. NetworkManager joins the best one in
+range and falls back by itself; wired Ethernet still wins whenever it's plugged in (lower route
+metric). Profiles are root-only (0600) and named "Xos Wi-Fi N: <ssid>"; earlier Xos profiles are
+replaced, anything else is left alone.
+"""
+
+import json
+import sys
+import uuid
+from pathlib import Path
+
+DIR = Path(sys.argv[1] if len(sys.argv) > 1 else "/etc/NetworkManager/system-connections")
+
+
+def esc(v: str) -> str:
+    return v.replace("\\", "\\\\")  # keyfile values: backslash is the only escape that matters here
+
+
+networks = json.load(sys.stdin).get("wifi") or []
+DIR.mkdir(parents=True, exist_ok=True)
+for old in DIR.glob("xos-wifi-*.nmconnection"):
+    old.unlink()
+for i, n in enumerate(networks):
+    sec = (f"[wifi-security]\nkey-mgmt=wpa-psk\npsk={esc(n['psk'])}\n\n" if n.get("psk") else "")
+    body = (f"[connection]\nid=Xos Wi-Fi {i + 1}: {esc(n['ssid'])}\nuuid={uuid.uuid4()}\ntype=wifi\n"
+            f"autoconnect=true\nautoconnect-priority={(len(networks) - i) * 10}\n\n"
+            f"[wifi]\nmode=infrastructure\nssid={esc(n['ssid'])}\n\n{sec}"
+            "[ipv4]\nmethod=auto\n\n[ipv6]\nmethod=auto\n")
+    path = DIR / f"xos-wifi-{i + 1}.nmconnection"
+    path.touch(mode=0o600)
+    path.chmod(0o600)
+    path.write_text(body)
+    print(f"    Wi-Fi {i + 1}: {n['ssid']}")

@@ -1,0 +1,38 @@
+[Unit]
+Description=Xos room computer (Google Meet in Chromium on the TV, driven by the room tablet)
+After=systemd-user-sessions.service network-online.target
+Wants=network-online.target
+Conflicts=getty@tty1.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=notify
+NotifyAccess=main
+User=xos
+# A login session on tty1, so Cage gets the seat (HDMI) and PipeWire runs for the user.
+PAMName=login
+TTYPath=/dev/tty1
+StandardInput=tty
+StandardOutput=journal
+StandardError=journal
+UtmpIdentifier=tty1
+UtmpMode=user
+Environment=XDG_SESSION_TYPE=wayland HOME=/var/lib/xos/home
+EnvironmentFile=/etc/xos/appliance.env
+StateDirectory=xos
+StateDirectoryMode=0700
+RuntimeDirectory=xos
+RuntimeDirectoryMode=0750
+# Additive dependency setup also runs on the first update from an older room image.
+ExecStartPre=+/usr/bin/python3 -I /opt/xos/current/os/appliance/xos_room_packages.py
+TimeoutStartSec=5min
+ExecStart=/usr/bin/python3 /opt/xos/current/os/appliance/xos_room_linux.py --room ${XOS_ROOM} --server ${XOS_SERVER}
+Restart=always
+RestartSec=3
+# The agent pings the watchdog with every heartbeat (5 s); a hang restarts it.
+WatchdogSec=60
+ProtectSystem=full
+PrivateTmp=yes
+
+[Install]
+WantedBy=graphical.target

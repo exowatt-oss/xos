@@ -1,0 +1,34 @@
+version: "3"
+tasks:
+  dev:
+    desc: Run the Xos server with hot reload at http://localhost:8000 (site, kiosk views, hub API)
+    cmds:
+      - uv run uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+
+  test:
+    desc: Run pytest
+    cmds:
+      - uv run pytest
+
+  lint:
+    desc: Run ruff check and format-check (no fix)
+    cmds:
+      - uv run ruff check .
+      - uv run ruff format --check .
+
+  format:
+    desc: Auto-format Python code with ruff
+    cmds:
+      - uv run ruff format .
+      - uv run ruff check --fix .
+
+  firetv:
+    desc: Build the Xos TV Fire TV APK and publish it to firetv/xos-tv.apk
+    cmds:
+      - ./firetv/build.sh
+      - cp firetv/build/xos-tv.apk firetv/xos-tv.apk
+
+  firetv:provision:
+    desc: "Install + configure Xos TV on a Fire TV Stick: task firetv:provision -- <ip> [screen] [server] [--reboot-test]"
+    cmds:
+      - ./firetv/provision.sh {{.CLI_ARGS}}

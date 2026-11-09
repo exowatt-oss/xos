@@ -1,0 +1,14 @@
+#!/bin/sh
+# AirPlay receiver (UxPlay) for an Xos screen: iPhones, iPads and Macs on the same network see
+# /etc/xos/airplay.name in Screen Mirroring. The mirrored picture opens as a full-screen window on
+# the kiosk's Cage display, over Chromium, and goes away when they stop mirroring.
+NAME=$(cat /etc/xos/airplay.name 2>/dev/null || hostname)
+XDG_RUNTIME_DIR="/run/user/$(id -u)"
+export XDG_RUNTIME_DIR
+# Wait for the kiosk (xos-kiosk.service) to start Cage.
+for _ in $(seq 1 120); do
+  [ -S "$XDG_RUNTIME_DIR/wayland-0" ] && break
+  sleep 1
+done
+export WAYLAND_DISPLAY=wayland-0
+exec uxplay -n "$NAME" -nh -fs -vs waylandsink -as autoaudiosink -reset 5

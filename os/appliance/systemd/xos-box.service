@@ -1,0 +1,16 @@
+[Unit]
+Description=Xos box helper: register this box, become a room computer when Admin pairs it as one
+Wants=network-online.target
+After=network-online.target xos-hostname.service
+# First at boot, before the display opens: the box's secret is registered before its id is public.
+Before=xos-display.service
+ConditionPathExists=/etc/xos/appliance.json
+
+[Service]
+Type=oneshot
+ExecStart=/opt/xos/current/os/appliance/xos-box
+# Reinstalling as a room computer downloads packages: give it time.
+TimeoutStartSec=30min
+
+[Install]
+WantedBy=multi-user.target

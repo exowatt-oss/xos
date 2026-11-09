@@ -1,0 +1,11 @@
+[
+  {"id": "demo-1", "status": "confirmed", "summary": "Weekly sync",
+   "start": {"dateTime": "2026-10-21T11:30:00-05:00"}, "end": {"dateTime": "2026-10-21T12:10:00-05:00"},
+   "organizer": {"email": "someone@example.com"},
+   "attendees": [{"email": "c_atrium0example@resource.calendar.google.com", "resource": true, "responseStatus": "accepted"}],
+   "hangoutLink": "https://meet.google.com/abc-defg-hij"},
+  {"id": "demo-2", "status": "confirmed", "summary": "Customer call",
+   "start": {"dateTime": "2026-10-21T12:10:00-05:00"}, "end": {"dateTime": "2026-10-21T12:40:00-05:00"},
+   "organizer": {"email": "someone@example.com"},
+   "location": "https://zoom.us/j/1234567890"}
+]

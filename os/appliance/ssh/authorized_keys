@@ -1,0 +1,2 @@
+# Public SSH keys every Xos box's maintenance login (xosadmin) accepts, one per line.
+# Add your own here, or in Admin → Setup → SSH keys. Never put a private key here.

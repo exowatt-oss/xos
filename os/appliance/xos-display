@@ -1,0 +1,24 @@
+#!/bin/sh
+# Xos display: the room or lobby screen, full screen on the TV. It opens the Xos server like the
+# Fire TV does, so Admin → Screens names it and switches what it shows; until then it shows its
+# pairing code (#/setup). No debugging port: nothing drives this browser but the page itself.
+set -eu
+STATE="${STATE_DIRECTORY:-/var/lib/xos}"
+ID_FILE="$STATE/identity.json"
+if [ ! -s "$ID_FILE" ]; then
+  HOST=$(hostname | cut -d. -f1 | sed 's/^xos-\{0,1\}//' | tr -c 'a-zA-Z0-9\n' '-' | cut -c1-20)
+  umask 077
+  printf '{"id": "xos-%s%s"}\n' "${HOST:+$HOST-}" "$(od -An -N3 -tx1 /dev/urandom | tr -d ' \n')" > "$ID_FILE"
+fi
+ID=$(sed -n 's/.*"id": *"\([^"]*\)".*/\1/p' "$ID_FILE")
+REL=$(readlink /opt/xos/current 2>/dev/null | sed 's#.*/##' | cut -c1-12)
+URL="${XOS_SERVER}/app/?kiosk=1&device=${ID}&client=xos-display-${REL:-dev}&restore=1#/${XOS_SHOW:-setup}"
+CHROMIUM=$(command -v chromium || command -v chromium-browser)
+mkdir -p "$STATE/chromium-display"
+# Only this service ever runs this profile. A lock left by a power cut (or from before the box took
+# its own hostname) would make Chromium stop at "profile in use by another computer": clear it.
+rm -f "$STATE/chromium-display/SingletonLock" "$STATE/chromium-display/SingletonSocket" "$STATE/chromium-display/SingletonCookie"
+exec cage -s -- "$CHROMIUM" --kiosk --ozone-platform=wayland --no-first-run --noerrdialogs \
+  --disable-infobars --disable-session-crashed-bubble --disable-features=Translate,MediaRouter \
+  --password-store=basic --autoplay-policy=no-user-gesture-required \
+  --check-for-update-interval=31536000 --user-data-dir="$STATE/chromium-display" "$URL"

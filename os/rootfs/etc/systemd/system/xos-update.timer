@@ -1,0 +1,11 @@
+[Unit]
+Description=Check the Xos server for node updates nightly and after boot
+
+[Timer]
+OnBootSec=5min
+OnCalendar=*-*-* 04:00
+RandomizedDelaySec=20min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

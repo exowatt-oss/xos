@@ -1,0 +1,12 @@
+#!/bin/bash
+# Keep this node in step with the Xos server: if the server's node bundle changed since the last
+# install, fetch it and re-run the installer with the same options. The screens themselves load
+# their views live from the server, so this only matters for the node's own scripts and services.
+set -euo pipefail
+SERVER=$(cat /etc/xos/server 2>/dev/null || echo https://xos.example.org)
+NEW=$(curl -fsS --max-time 30 "$SERVER/os/xos-node.sha256")
+OLD=$(cat /opt/xos/src/bundle.sha256 2>/dev/null || true)
+if [ "$NEW" = "$OLD" ]; then echo "Xos is up to date ($NEW)"; exit 0; fi
+echo "Updating Xos from $SERVER"
+eval "set -- $(cat /etc/xos/install.args 2>/dev/null)"
+curl -fsSL "$SERVER/os/install.sh" | bash -s -- "$@"

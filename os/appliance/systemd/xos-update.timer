@@ -1,0 +1,11 @@
+[Unit]
+Description=Check the Xos server for a new release after boot and nightly
+
+[Timer]
+OnBootSec=10min
+OnCalendar=*-*-* 03:30
+RandomizedDelaySec=30min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

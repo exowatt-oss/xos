@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Welcome · Xos</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #f5f9fa; background: #101c26; }
+    * { box-sizing: border-box; }
+    body { min-height: 100vh; min-height: 100dvh; margin: 0; display: flex; flex-direction: column; padding: clamp(2rem, 5vw, 5rem); background: radial-gradient(ellipse at 85% 15%, #164653 0%, transparent 55%), #101c26; }
+    main { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    h1 { margin: 0; font-size: clamp(4rem, 12vw, 12rem); line-height: 1.05; letter-spacing: -.05em; }
+    #site { margin: 1.5rem 0 0; font-size: clamp(1.25rem, 3vw, 3rem); color: #92d9d6; }
+    footer { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 1rem; color: #c8d7dd; font-variant-numeric: tabular-nums; }
+    #clock { font-size: clamp(2rem, 5vw, 5rem); font-weight: 600; }
+    #date { font-size: clamp(1rem, 2.2vw, 2rem); }
+  </style>
+</head>
+<body>
+  <main><h1>Welcome</h1><p id="site" hidden></p></main>
+  <footer><time id="clock"></time><time id="date"></time></footer>
+  <script>
+    const site = new URLSearchParams(location.search).get('site');
+    if (site) { const subtitle = document.getElementById('site'); subtitle.textContent = site; subtitle.hidden = false; }
+    function updateTime() {
+      const now = new Date();
+      const clock = document.getElementById('clock');
+      const date = document.getElementById('date');
+      clock.textContent = new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit' }).format(now);
+      date.textContent = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(now);
+      clock.dateTime = date.dateTime = now.toISOString();
+    }
+    updateTime(); setInterval(updateTime, 1000);
+  </script>
+</body>
+</html>

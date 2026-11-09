@@ -1,0 +1,11 @@
+#!/bin/sh
+# Runs in the image after packages are installed: the appliance installer, from this checkout,
+# without starting anything (there's no running system yet). Role and room come from
+# mkosi --environment=XOS_ROLE=… XOS_ROOM=… [XOS_SHOW=…] [XOS_SERVER=…].
+set -eu
+ROLE="${XOS_ROLE:?set XOS_ROLE=room or display}"
+set -- --role "$ROLE" --from /work/xos --no-start --server "${XOS_SERVER:-https://xos.example.org}"
+[ -n "${XOS_ROOM:-}" ] && set -- "$@" --room "$XOS_ROOM"
+[ -n "${XOS_SHOW:-}" ] && set -- "$@" --show "$XOS_SHOW"
+mkosi-chroot /work/xos/os/appliance/install.sh "$@"
+mkosi-chroot systemctl enable systemd-networkd.service systemd-resolved.service systemd-timesyncd.service

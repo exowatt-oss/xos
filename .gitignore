@@ -1,0 +1,25 @@
+# Environment
+.env
+
+# OS
+.DS_Store
+__pycache__/
+*.pyc
+
+# Xos server
+.venv/
+data/
+.pytest_cache/
+.ruff_cache/
+node_modules/
+
+# Xos USB images hold a Wi-Fi password (os/image/make-usb.sh)
+xos-usb-*.iso
+*.iso
+
+# Built and signed Android packages and signing keys never go into Git.
+*.apk
+*.aab
+*.keystore
+*.jks
+quest/build/

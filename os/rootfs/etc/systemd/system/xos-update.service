@@ -1,0 +1,8 @@
+[Unit]
+Description=Xos update (re-install from the Xos server when its node bundle changes)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/xos-update

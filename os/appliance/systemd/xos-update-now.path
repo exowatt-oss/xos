@@ -1,0 +1,9 @@
+[Unit]
+Description=Xos update now (Admin → Update now asks the room computer, which leaves this file)
+
+[Path]
+PathExists=/run/xos/update-now
+Unit=xos-update.service
+
+[Install]
+WantedBy=multi-user.target

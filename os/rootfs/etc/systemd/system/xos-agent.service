@@ -1,0 +1,15 @@
+[Unit]
+Description=Xos agent (role UI, state hub, health, CEC, dry-run meeting adapter)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=xos
+Environment=XOS_NODE_CONFIG=/etc/xos/node.json
+Environment=XOS_APP_ROOT=/opt/xos/site
+ExecStart=/usr/bin/python3 /opt/xos/agent/xos_agent.py
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,10 @@
+[Unit]
+Description=Sync the Xos maintenance login's SSH keys every 10 minutes
+
+[Timer]
+OnBootSec=45
+OnUnitActiveSec=10min
+RandomizedDelaySec=30
+
+[Install]
+WantedBy=timers.target

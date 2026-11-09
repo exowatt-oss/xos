@@ -1,0 +1,9 @@
+[Unit]
+Description=Xos update (next release from the Xos server; rolls back if it isn't healthy)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStartPre=-/bin/rm -f /run/xos/update-now
+ExecStart=/usr/bin/python3 /opt/xos/current/os/appliance/xos_update.py

@@ -1,0 +1,16 @@
+[Unit]
+Description=Xos AirPlay receiver (UxPlay, shown on the kiosk display)
+After=xos-kiosk.service avahi-daemon.service network-online.target
+Wants=avahi-daemon.service network-online.target
+BindsTo=xos-kiosk.service
+ConditionPathExists=/etc/xos/airplay.name
+
+[Service]
+User=xos
+Environment=HOME=/home/xos
+ExecStart=/usr/local/bin/xos-airplay
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=graphical.target

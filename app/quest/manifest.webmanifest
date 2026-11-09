@@ -1,0 +1,24 @@
+{
+  "id": "/app/quest/",
+  "name": "Xos Experiences",
+  "short_name": "Xos Quest",
+  "start_url": "/app/quest/",
+  "scope": "/app/quest/",
+  "display": "standalone",
+  "background_color": "#102d32",
+  "theme_color": "#102d32",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
