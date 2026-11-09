@@ -99,6 +99,7 @@ works with zero external services.
 | `XOS_BOOTSTRAP_ADMINS` | empty | Comma-separated starting Admins until a super admin changes their role. |
 | `XOS_ALLOWED_EMAIL_DOMAINS` | empty | Domains whose signed-in people get a role (empty: whatever forwarded-auth admits). |
 | `XOS_MCP_TOKEN` | empty | Bearer token for `/mcp` with full Admin. Unset: only signed-in Admins. |
+| `FORWARDED_AUTH_TRUSTED_HOSTNAMES` | empty | Required when exposing `/mcp`: the public hostname (comma-separated if multiple); without it, forwarded/OIDC-mode MCP requests are rejected. |
 | `XOS_ICE_SERVERS`, `XOS_TURN_USERNAME`, `XOS_TURN_PASSWORD` | empty | WebRTC STUN/TURN for screen sharing across networks. Empty: same LAN only. |
 | `XOS_TIMEZONE`, `XOS_SITE_TIMEZONES` | `UTC` | Timezone for Linux room boxes, per site (JSON). |
 | `ZOOM_ACCOUNT_ID`, `ZOOM_CLIENT_ID`, `ZOOM_CLIENT_SECRET` | empty | Optional Zoom Server-to-Server OAuth app for Zoom Rooms; dry-run until set. |
@@ -119,7 +120,12 @@ example:
 FORWARDED_AUTH_ISSUER=https://accounts.google.com,accounts.google.com
 FORWARDED_AUTH_AUDIENCE=<your OAuth client id>
 FORWARDED_AUTH_ALLOWED_EMAIL_DOMAINS=example.com
+FORWARDED_AUTH_TRUSTED_HOSTNAMES=xos.example.org
 ```
+
+In forwarded/OIDC mode, `/mcp` does **not** trust localhost, `127.0.0.1`, `[::1]` or
+`testserver` by default. Set `FORWARDED_AUTH_TRUSTED_HOSTNAMES` to the public hostname
+serving `/mcp`; do not enable `FORWARDED_AUTH_ALLOW_LOOPBACK_HOSTS` on a deployment.
 
 A Bearer token that doesn't verify is refused (401), never treated as anonymous; if verification
 isn't configured, every signed-in request is refused. Optionally, agents can call the read-only

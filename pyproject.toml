@@ -13,7 +13,7 @@ dependencies = [
     "segno>=1.6",
     "mcp>=2.0.0,<3.0.0",
     # Sign-in: verifies the identity an auth proxy (oauth2-proxy, any OIDC provider) forwards.
-    "forwarded-auth[fastapi,mcp] @ git+https://github.com/exowatt-oss/forwarded-auth@2a3463c4ed4da46591f4c0ec930bb3483e12dafd",
+    "forwarded-auth[fastapi,mcp] @ git+https://github.com/exowatt-oss/forwarded-auth@58fd85f8ee6624c430aa23c3947d62f8840e5a52",
     "adb-shell[async]>=0.4.4",
 ]
 

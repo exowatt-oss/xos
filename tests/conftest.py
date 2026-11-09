@@ -19,6 +19,8 @@ os.environ["XOS_SUPER_ADMINS"] = "root@example.com"
 # Never verify against a real identity provider; tests that need tokens configure their own.
 for key in [k for k in os.environ if k.startswith("FORWARDED_AUTH_")]:
     del os.environ[key]
+# TestClient uses Host: testserver; only tests may opt into loopback MCP transport.
+os.environ["FORWARDED_AUTH_ALLOW_LOOPBACK_HOSTS"] = "true"
 
 import pytest  # noqa: E402
 
